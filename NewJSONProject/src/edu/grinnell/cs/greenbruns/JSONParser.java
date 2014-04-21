@@ -79,18 +79,18 @@ public class JSONParser
           // Handle the object
         case '"':
           // Handle the string
-          String outString = "";
+          StringBuffer outString = new StringBuffer("");
           context.index++;
           current = context.input.charAt(context.index);
           // while we haven't hit the end yet:
           while (current != '\"')
             {
-              outString = outString + current;
+              outString.append(current);
               if (current == '\\')
                 {
                   context.index++;
                   char help = context.input.charAt(context.index);
-                  outString.concat(Character.toString(help));
+                  outString.append(Character.toString(help));
                 }// if
               context.index++;
               current = context.input.charAt(context.index);
@@ -112,24 +112,12 @@ public class JSONParser
         case '-':
           String preE = "";
           boolean hasE = false;
-          outString = "";
+          StringBuffer outString2 = new StringBuffer("");
 
           // while we aren't at the end of the expression:
           while (current != ',' && current != '}' && current != ']')
             {
-              // checks for an exponential expression
-              if (current == 'e')
-                {
-                  hasE = true;
-                  preE = outString;
-                  outString = "";
-                }// if
-                 // if there's no exponent yet, just add it to the
-                 // string.
-              else
-                {
-                  outString = outString + current;
-                }// else
+              outString2.append(current);
               context.index++;
               current = context.input.charAt(context.index);
             }// while
@@ -139,14 +127,14 @@ public class JSONParser
             {
               BigDecimal output = new BigDecimal(preE);
               BigDecimal exponent =
-                  new BigDecimal(Math.pow(10, Double.parseDouble(outString)));
+                  new BigDecimal(Math.pow(10, Double.parseDouble(outString2.toString())));
               output = output.multiply(exponent);
               return output;
             }// if
              // if our expression has no exponents
           else
             {
-              return new BigDecimal(outString);
+              return new BigDecimal(outString2.toString());
             }// else
 
         default: // In this case, we handle a constant (null/true/false)
@@ -209,3 +197,6 @@ class Context
 // http://stackoverflow.com/questions/3600686/java-boolean-instanceof-boolean
 // figured out that you need "instanceof Boolean" instead of
 // "instanceof boolean" for unparser
+
+// Sam Rebelsky taught us how to dougie. He also gave us help figuring out the context
+// class and suggested the use of stringbuffers.

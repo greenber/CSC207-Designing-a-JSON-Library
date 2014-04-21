@@ -10,21 +10,23 @@ public class JSONUnparser
   /*
    * unparse(Object) is a wrapper for unparser().
    * 
-   *  It takes in a java object, and creates a context object for unparser() to be called on.
+   * It takes in a java object, and creates a context object for unparser() to
+   * be called on.
    */
-  
+
   public static String unparse(Object input)
     throws Exception
   {
     AltContext context = new AltContext();
     context.input = input;
-    context.output = "";
+    context.output = new StringBuffer("");
     return unparser(context);
-  }//unparse(Object input)
-  
+  }// unparse(Object input)
+
   /*
-   * unparser(context) looks at the JAVA object stored in an AltContext object and returns how it would
-   * be represented in a string of JSON.  The object is unchanged.
+   * unparser(context) looks at the JAVA object stored in an AltContext object
+   * and returns how it would be represented in a string of JSON. The object is
+   * unchanged.
    */
 
   public static String unparser(AltContext context)
@@ -34,29 +36,27 @@ public class JSONUnparser
       {
         Object[] keyArray = ((Hashtable) context.input).keySet().toArray();
         Object[] valArray = ((Hashtable) context.input).values().toArray();
-        context.output = context.output.concat("{");
+        context.output.append("{");
         for (int i = 0; i < keyArray.length; i++)
           {
             if (i != keyArray.length - 1)
               {
-                context.output =
-                    context.output.concat("\"" + keyArray[i] + "\":"
-                                          + unparse(valArray[i]) + ",");
-              }//if
+                context.output.append("\"" + keyArray[i] + "\":"
+                                      + unparse(valArray[i]) + ",");
+              }// if
             else
               {
-                context.output =
-                    context.output.concat("\"" + keyArray[i] + "\":"
-                                          + unparse(valArray[i]));
-              }//else
-          }//for
+                context.output.append("\"" + keyArray[i] + "\":"
+                                      + unparse(valArray[i]));
+              }// else
+          }// for
 
-        context.output = context.output.concat("}");
-      }//if
+        context.output.append("}");
+      }// if
 
     else if (context.input instanceof ArrayList)
       {
-        context.output = context.output.concat("[");
+        context.output.append("[");
         ((ArrayList) context.input).trimToSize();
         Object[] temp = ((ArrayList) context.input).toArray();
 
@@ -64,41 +64,41 @@ public class JSONUnparser
           {
             if (i != temp.length - 1)
               {
-                context.output = context.output.concat(unparse(temp[i]) + ",");
-              }//if
+                context.output.append(unparse(temp[i]) + ",");
+              }// if
             else
               {
-                context.output = context.output.concat(unparse(temp[i]));
-              }//else
-          }//for
-        context.output = context.output.concat("]");
-      }//else if
+                context.output.append(unparse(temp[i]));
+              }// else
+          }// for
+        context.output.append("]");
+      }// else if
 
-    else if (context.input instanceof String)
+    else if (context.input instanceof String || context.input instanceof StringBuffer)
       {
-        context.output = context.output.concat("\"" + context.input + "\"");
-      }//else if
+        context.output.append("\"" + context.input + "\"");
+      }// else if
 
     else if (context.input instanceof Boolean
              || context.input instanceof BigDecimal || context.input == null)
       {
         if (context.input == null)
           {
-            context.output = context.output.concat("null");
-          }//if
+            context.output.append("null");
+          }// if
         else
           {
-            context.output = context.output.concat(context.input.toString());
-          }//else
-      }//else if
+            context.output.append(context.input.toString());
+          }// else
+      }// else if
 
     else
       {
         throw new Exception("Input not created from valid components.");
-      }//else
-    return context.output;
-  }//unparser(AltContext)
-}//class JSONUnparser
+      }// else
+    return context.output.toString();
+  }// unparser(AltContext)
+}// class JSONUnparser
 
 class AltContext
 {
@@ -106,7 +106,7 @@ class AltContext
    * The giant string we are building, to eventually return
    */
 
-  String output;
+  StringBuffer output;
 
   /**
    * The input we get
