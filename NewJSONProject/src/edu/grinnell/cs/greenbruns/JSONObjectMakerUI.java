@@ -1,8 +1,18 @@
 package edu.grinnell.cs.greenbruns;
 
 import java.io.IOException;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.applet.*;
+import java.awt.Frame;
+import java.net.*;
+
+import javax.swing.*;
+import javax.sound.sampled.*;
 
 public class JSONObjectMakerUI
 {
@@ -10,7 +20,33 @@ public class JSONObjectMakerUI
   public static Object objectMaker()
     throws Exception
   {
-    UIContext context = new UIContext();
+	//Dumbie LoopSound =)/how we would do it for all of them.(Take this comment out)
+	//sLoopSound.play("/Users/alexandragreenberg/Desktop/Stuff/Windows OS - Windows Sounds (mp3cut.net).wav");
+	Frame frame = new Frame();
+	//JOptionPane.showMessageDialog(frame, "Welcome to the JSON Object-Maker!");
+	
+	Object[] options = {"Yes",
+	                    "No",
+	                    "Maybe"};
+	
+	int n = JOptionPane.showOptionDialog(frame,
+	    "Are you ready to parse some JSON?",
+	    "JSON PARSE MAKER!!!",
+	    JOptionPane.YES_NO_CANCEL_OPTION,
+	    JOptionPane.QUESTION_MESSAGE,
+	    null,
+	    options,
+	    options[2]);
+	
+	if(n == 1)
+	{
+		JOptionPane.showMessageDialog(frame, "Frankly my dear I don't give a damn!");
+
+	}//If(n)
+	else
+	{
+	
+	UIContext context = new UIContext();
     context.depthCount = 0;
     context.output = new StringBuffer("");
     boolean validInput = false;
@@ -33,6 +69,7 @@ public class JSONObjectMakerUI
         switch (input)
           {
             case "a":
+            	LoopSound.play("/Users/alexandragreenberg/Desktop/Stuff/Windows OS - Windows Sounds (mp3cut.net).wav");
               addArray(context);
               pen.println(context.output);
               return JSONParser.parse(context.output.toString());
@@ -46,6 +83,7 @@ public class JSONObjectMakerUI
               System.err.println("Invalid input, please try again.");
           }
       }
+	}//Outer if (n == 1)(take if you don't want)
     return null;
   }
 
@@ -244,10 +282,27 @@ class UIContext
   StringBuffer output;
 }
 
+
+
 // SOURCES:
 
 // http://www.cs.grinnell.edu/~rebelsky/Courses/CSC207/2014S/readings/io.html
 // I love this reading so much <3, I read it every time I do i/o in Java.
 
-// http://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
-// How to play sounds in Java
+// http://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java (and time)!
+// How to play sounds in Java 
+
+//http://www.wikihow.com/Add-JARs-to-Project-Build-Paths-in-Eclipse-%28Java%29
+//How to import Jars
+
+//http://docs.oracle.com/javase/8/javafx/get-started-tutorial/jfx-overview.htm#JFXST784
+//Explanation 
+
+//http://www.cs.cmu.edu/~illah/CLASSDOCS/javasound.pdf
+//Played clip 
+
+//http://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#dialogdemo
+//Boxes
+
+//Helen Doughery
+//message
