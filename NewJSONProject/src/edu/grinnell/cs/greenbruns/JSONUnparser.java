@@ -82,18 +82,19 @@ public class JSONUnparser
     else if (context.input instanceof Boolean
              || context.input instanceof BigDecimal || context.input == null)
       {
-        if (context.input == null)
+        if (context.input != null)
           {
-            context.output.append("null");
+        	context.output.append(context.input.toString());
           }// if
         else
           {
-            context.output.append(context.input.toString());
+            context.output.append("null");
           }// else
       }// else if
 
     else
       {
+    	System.out.println((context.input==null));
         throw new Exception("Input not created from valid components.");
       }// else
     return context.output.toString();

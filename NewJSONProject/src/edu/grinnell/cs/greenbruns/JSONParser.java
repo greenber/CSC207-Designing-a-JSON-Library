@@ -70,7 +70,14 @@ public class JSONParser
               context.index++;
               current = context.input.charAt(context.index);
               Object value = newParse(context);
+              if(value != null)
+              {
               myTable.put(key, value);
+              } 
+              else
+              {
+            	  myTable.put(key,"null");
+              }
               current = context.input.charAt(context.index);
               context.index++;
             }// while
@@ -155,6 +162,8 @@ public class JSONParser
             }// else if
           else
             {
+        	  //????
+        	  
               return null;
             }// else
 

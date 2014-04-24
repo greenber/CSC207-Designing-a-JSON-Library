@@ -22,12 +22,15 @@ public class LoopSound {
 		AudioInputStream ais = AudioSystem
 				.getAudioInputStream(file);
 	
-        System.out.println(clip.isActive());
+        
         clip.open(ais);
         clip.setMicrosecondPosition(0);
 
         clip.start();
         //clip.close();
+        
+
+        return;
     }
 
 }//LoopSound
