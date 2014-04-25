@@ -4,13 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
-
 import java.nio.file.Paths;
-
 import java.awt.event.WindowEvent;
-
-
-
 import javax.swing.*;
 
 
@@ -31,11 +26,10 @@ public class JSONObjectMakerUI {
 		Object temp;
 		javax.swing.JFrame frame = new javax.swing.JFrame();
 		frame.setUndecorated(true);
-		frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+		frame.getRootPane().setWindowDecorationStyle(JRootPane.INFORMATION_DIALOG);
 		
 		messageBox("Welcome to the JSON Maker!\n" + "This tool allows you to intuitively make a JAVA Object\n"
 				+ "and also generates equivalent JSON code \n", "Welcome!",frame);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Offers the user sound or not
 		String[] yesOrNo = { "Yes", "No" };
 
@@ -57,6 +51,7 @@ public class JSONObjectMakerUI {
 		else {
 			//makes our UIContext
 			UIContext context = new UIContext();
+			//Checks if the user want sound
 			if (j == 0) {
 				context.sound = true;
 			}// if
@@ -66,12 +61,10 @@ public class JSONObjectMakerUI {
 			context.depthCount = 0;
 			//creates a frame 
 			context.frame = new javax.swing.JFrame();
-			
-			
-	
-			
 			context.output = new StringBuffer("");
+			context.exit = false;
 			boolean validInput = false;
+			
 			//set frame default
 			context.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			// Make a pen to give output
@@ -88,28 +81,48 @@ public class JSONObjectMakerUI {
 				switch (context.optionsHolder) {
 				// Arrays
 				case 0:
-					//if we add an array
+					// if we add an array
 					addArray(context);
-					pen.println(context.output);
-					temp = JSONParser.parse(context.output.toString());
-					//closes the window
-					context.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-					pen.println(context.output);
+					if (context.exit) {
+						temp = JSONParser.parse("[]");
+						context.frame.dispatchEvent(new WindowEvent(frame,
+								WindowEvent.WINDOW_CLOSING));
+					}// if(exit)
+					else {
+						//Displays the "object" in a window
+						messageBox(context.output.toString(), "Your Json!",context.frame);
+						temp = JSONParser.parse(context.output.toString());
+						// closes the window
+						context.frame.dispatchEvent(new WindowEvent(frame,
+								WindowEvent.WINDOW_CLOSING));
+						pen.println(context.output);
+					}// Else
 					return temp;
 					// Objects
 				case 1:
 					//if we add an object
 					addObject(context);
+					if(context.exit)
+					{
+						temp = JSONParser.parse("{}");
+						context.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+					}
+					else {
+					
+					//displays the json object
+					messageBox(context.output.toString(), "Your Json!",context.frame);
 					pen.println(context.output);
 					temp= JSONParser.parse(context.output.toString());
 					//close the window
 					context.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 					pen.println(context.output);
+					}
 					return temp;
 				default:
-					// In case of the end of the world (but I don't know how one
-					// would get to here)
-					errorBox("Tried to Exit!");
+					// When some clicks the the red x
+					temp = JSONParser.parse("[{}]");
+					context.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+					return temp;
 				}// while
 			}// while
 		}// Outer if
@@ -123,12 +136,11 @@ public class JSONObjectMakerUI {
 	
 	public static void addArray(UIContext context) throws Exception {
 		boolean validInput = false;
-
-		context.depthCount++;
-		context.output.append("[");
-		while (validInput == false) {
-			// The options
-			String[] ops = { "Add", "Close" };
+			context.depthCount++;
+			context.output.append("[");
+			while (validInput == false) {
+				// The options
+				String[] ops = { "Add", "Close", "Cancel" };
 			playSound(1, context.sound);
 			// Pop up box
 			context.optionsHolder = optionBox(
@@ -139,12 +151,11 @@ public class JSONObjectMakerUI {
 							+ context.output.toString()
 							+ "\n Click Add to add an element, press Close to close array", context.frame);
 			//if they want to add an element
-			if (context.optionsHolder == 0) {
+			switch(context.optionsHolder)
+			{
+			case 0:
 				addElement(context);
-			}// if(add)
-			
-			//if they want to close the array
-			else if (context.optionsHolder == 1) {
+			case 1:
 				if (context.output.charAt(context.output.length() - 1) == ',') {
 					context.output.setCharAt(context.output.length() - 1, ']');
 				}// if(comma)
@@ -157,13 +168,24 @@ public class JSONObjectMakerUI {
 
 				context.depthCount--;
 				return;
-			}// if (close)
+			case 2:
+				if(context.depthCount <= 1)
+				{
+				context.exit = true;
+				return;
+				}//if 
+				else 
+				{
+					addElement(context);
+					return;
+				}//else
+			default:
+				errorBox("Trying to exit!");
+				return;
+				}// Switch
 
-			else {
-				errorBox("Tried to Exit!");
-
-			}// else (error)
-		}// while(false)
+			}// while(false)
+	
 	}// addArray(UIContext)
 
 	
@@ -178,7 +200,7 @@ public class JSONObjectMakerUI {
 		context.output.append("{");
 		while (true) {
 			String input;
-			String[] ops = { "Add", "Close" };
+			String[] ops = { "Add", "Close", "Cancel" };
 			playSound(2, context.sound);
 			context.optionsHolder = optionBox(
 					ops,
@@ -195,7 +217,6 @@ public class JSONObjectMakerUI {
 						"Get key!");
 				if (input.equals("")) {
 					//if the user gives an invalid key (empty key)
-
 					errorBox("Invalid Key!");
 					// Deletes the {
 					context.output.deleteCharAt(context.output.length() - 1);
@@ -218,7 +239,7 @@ public class JSONObjectMakerUI {
 				}// else
 
 			case 1:
-				// if the user wants to close the array
+				// if the user wants to close the object
 				if (context.output.charAt(context.output.length() - 1) == ',') {
 					context.output.setCharAt(context.output.length() - 1, '}');
 				}// if(comma)
@@ -230,7 +251,9 @@ public class JSONObjectMakerUI {
 				}// if(depthcount)
 				context.depthCount--;
 				return;
-
+			case 2:
+				context.exit = true;
+				return;
 			default:
 				errorBox("Trying to add a invalid object");
 			}// switch(context.optionsHolder)
@@ -262,6 +285,12 @@ public class JSONObjectMakerUI {
 		case 0:
 			input = submitBox("Please enter your desired value",
 					"Number Submit!");
+			//in case people click the cancel button
+			if(input == null)
+			{
+				addElement(context);
+					return;
+			}
 			try {
 				//makes sure the input is a valid number
 				BigDecimal value = new BigDecimal(input);
@@ -278,12 +307,18 @@ public class JSONObjectMakerUI {
 		case 1:
 			input = submitBox("Please enter your desired string(No Quotes)",
 					"String enter");
+			//In case people want to exit
+			if (input == null) {
+				addElement(context);
+					return;
+			}// if
 			// In case people don't listen
-			if (input == null || input.equals("")) {
-				errorBox("Empty String is not valid! Why would you want that?");
+			else if(input.equals(""))
+			{
+				errorBox("Empty String is not valid!");
 				addElement(context);
 				return;
-			}// if
+			}
 			else if (input.charAt(0) == '\"') {
 				errorBox("No Quotes!");
 				addElement(context);
@@ -303,7 +338,7 @@ public class JSONObjectMakerUI {
 			return;
 			// Boolean
 		case 4:
-			String[] op = { "True", "False", "Null" };
+			String[] op = { "True", "False", "Null", "Cancel" };
 			context.optionsHolder = optionBox(op, op.length, "Boolean Submit!",
 					"Click True to add true, False to add false, and Null to add null", context.frame);
 			switch (context.optionsHolder) {
@@ -318,6 +353,9 @@ public class JSONObjectMakerUI {
 				// Null
 			case 2:
 				context.output.append("null,");
+				return;
+			case 3:
+				addElement(context);
 				return;
 			}// switch(context.optionsHolder)
 		default:
@@ -375,7 +413,7 @@ public class JSONObjectMakerUI {
 		javax.swing.JFrame frame = new javax.swing.JFrame();
 		Icon icon = iconGet();
 		String input = (String) JOptionPane.showInputDialog(frame, text,
-				topOfBox, JOptionPane.YES_NO_OPTION, icon, null, "");
+				topOfBox, JOptionPane.DEFAULT_OPTION, icon, null, "");
 		return input;
 	}// sumbitBox(String, String)
 
@@ -464,7 +502,7 @@ class UIContext {
 	int optionsHolder;
 	//true if the user wants sound, false otherwise.
 	boolean sound;
-	 
+	boolean exit;
 	javax.swing.JFrame frame;
 }// UIContext class
 
