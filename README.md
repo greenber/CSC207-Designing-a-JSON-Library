@@ -1,5 +1,5 @@
-README - J.S.O.N.(S!) (Just Some Objects Now (Source!))
-===============================
+README - Jsong - GUI JSON Parser with Audio
+===========================================
 
 Created by Alex Greenburg and Evan Bruns
 
