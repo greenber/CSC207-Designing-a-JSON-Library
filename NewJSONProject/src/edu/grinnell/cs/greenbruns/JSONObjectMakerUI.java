@@ -102,7 +102,7 @@ public class JSONObjectMakerUI {
 					}// if(exit)
 					else {
 						//Displays the "object" in a window
-						messageBox(context.output.toString(), "Your Json!",context.frame);
+						messageBox(context.output.toString(), "Json!",context.frame);
 						temp = JSONParser.parse(context.output.toString());
 						// closes the window
 						context.frame.dispatchEvent(new WindowEvent(frame,
@@ -122,7 +122,7 @@ public class JSONObjectMakerUI {
 					else {
 					
 					//displays the json object
-					messageBox(context.output.toString(), "Your Json!",context.frame);
+					messageBox(context.output.toString(), "Json!",context.frame);
 					pen.println(context.output);
 					temp= JSONParser.parse(context.output.toString());
 					//close the window
@@ -165,8 +165,13 @@ public class JSONObjectMakerUI {
 			//if they want to add an element
 			switch(context.optionsHolder)
 			{
+			//Add
 			case 0:
+				
 				addElement(context);
+				break;
+				
+			//Close
 			case 1:
 				if (context.output.charAt(context.output.length() - 1) == ',') {
 					context.output.setCharAt(context.output.length() - 1, ']');
@@ -177,9 +182,10 @@ public class JSONObjectMakerUI {
 				if (context.depthCount > 1) {
 					context.output.append(",");
 				}// depthcount()
-
 				context.depthCount--;
 				return;
+				
+			//Cancel
 			case 2:
 				if(context.depthCount <= 1)
 				{
@@ -301,7 +307,7 @@ public class JSONObjectMakerUI {
 			if(input == null)
 			{
 				addElement(context);
-					return;
+				return;
 			}
 			try {
 				//makes sure the input is a valid number
