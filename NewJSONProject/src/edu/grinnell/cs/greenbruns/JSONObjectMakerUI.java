@@ -32,6 +32,18 @@ public class JSONObjectMakerUI {
 				+ "and also generates equivalent JSON code \n", "Welcome!",frame);
 		// Offers the user sound or not
 		String[] yesOrNo = { "Yes", "No" };
+		
+		int k = optionBox(yesOrNo, yesOrNo.length, "Confused?",
+				"Would you like to know a little more about Json?", frame);
+		
+		if (k == 0)
+		{
+			
+			messageBox("JavaScript Object Notation,"
+					+ "is an open standard format that uses\n"
+					+ "human readable text to transmit"
+					+ "data objects consisting of attribute value pairs", "Json Info", frame);
+		}
 
 		int j = optionBox(yesOrNo, yesOrNo.length,
 				 "Sound?","Would you like sound today?", frame);
@@ -580,3 +592,6 @@ class UIContext {
 
 //Grinnell College
 //For having working Internet, so that I could make this amazing citation list
+
+//http://en.wikipedia.org/wiki/JSON
+//For Json Info for message
