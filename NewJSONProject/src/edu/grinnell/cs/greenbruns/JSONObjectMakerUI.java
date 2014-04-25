@@ -41,7 +41,7 @@ public class JSONObjectMakerUI {
 			
 			messageBox("JavaScript Object Notation,"
 					+ "is an open standard format that uses\n"
-					+ "human readable text to transmit"
+					+ " human readable text to transmit"
 					+ "data objects consisting of attribute value pairs", "Json Info", frame);
 		}
 
@@ -102,12 +102,13 @@ public class JSONObjectMakerUI {
 					}// if(exit)
 					else {
 						//Displays the "object" in a window
+						pen.println(context.output);
 						messageBox(context.output.toString(), "Json!",context.frame);
 						temp = JSONParser.parse(context.output.toString());
 						// closes the window
 						context.frame.dispatchEvent(new WindowEvent(frame,
 								WindowEvent.WINDOW_CLOSING));
-						pen.println(context.output);
+						
 					}// Else
 					return temp;
 					// Objects
@@ -127,7 +128,7 @@ public class JSONObjectMakerUI {
 					temp= JSONParser.parse(context.output.toString());
 					//close the window
 					context.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-					pen.println(context.output);
+					
 					}
 					return temp;
 				default:
@@ -186,7 +187,7 @@ public class JSONObjectMakerUI {
 				return;
 				
 			//Cancel
-			case 2:
+			default:
 				if(context.depthCount <= 1)
 				{
 				context.exit = true;
@@ -196,12 +197,8 @@ public class JSONObjectMakerUI {
 				{
 					addElement(context);
 					return;
-				}//else
-			default:
-				errorBox("Trying to exit!");
-				return;
-				}// Switch
-
+				}
+			}
 			}// while(false)
 	
 	}// addArray(UIContext)
@@ -233,6 +230,10 @@ public class JSONObjectMakerUI {
 				playSound(3, context.sound);
 				input = submitBox("Please enter a string for your key",
 						"Get key!");
+				if(input == null)
+				{
+					break;
+				}
 				if (input.equals("")) {
 					//if the user gives an invalid key (empty key)
 					errorBox("Invalid Key!");
@@ -269,11 +270,17 @@ public class JSONObjectMakerUI {
 				}// if(depthcount)
 				context.depthCount--;
 				return;
-			case 2:
+			default:
+				if(context.depthCount <= 1)
+				{
 				context.exit = true;
 				return;
-			default:
-				errorBox("Trying to add a invalid object");
+				}//if 
+				else 
+				{
+					addElement(context);
+					return;
+				}
 			}// switch(context.optionsHolder)
 		}// While(true)
 
