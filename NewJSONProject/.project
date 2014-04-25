@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>NeededFiles</name>
+			<type>2</type>
+			<location>/Users/alexandragreenberg/Desktop/Stuff</location>
+		</link>
+	</linkedResources>
 </projectDescription>
