@@ -7,11 +7,14 @@ import java.util.Hashtable;
 public class JSONUnparser
 {
 
-  /*
+  /**
    * unparse(Object) is a wrapper for unparser().
    * 
    * It takes in a java object, and creates a context object for unparser() to
    * be called on.
+   * 
+   * @author Alex Greenberg
+   * @author Evan Bruns
    */
 
   public static String unparse(Object input)
@@ -23,7 +26,7 @@ public class JSONUnparser
     return unparser(context);
   }// unparse(Object input)
 
-  /*
+  /**
    * unparser(context) looks at the JAVA object stored in an AltContext object
    * and returns how it would be represented in a string of JSON. The object is
    * unchanged.

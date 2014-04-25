@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.awt.event.WindowEvent;
+
 import javax.swing.*;
 
 
@@ -20,6 +22,8 @@ public class JSONObjectMakerUI {
 	 * - what the outer layer structure is (object or array)
 	 * 
 	 * Eventually returns the JAVA Object the user describes.
+	 * @author Alex Greenberg
+	 * @author Evan Bruns
 	 * */
 	public static Object objectMaker() throws Exception {
 		// Welcomes you into the parser
@@ -94,6 +98,7 @@ public class JSONObjectMakerUI {
 				// Arrays
 				case 0:
 					// if we add an array
+					
 					addArray(context);
 					if (context.exit) {
 						temp = JSONParser.parse("[]");
@@ -132,7 +137,7 @@ public class JSONObjectMakerUI {
 					}
 					return temp;
 				default:
-					// When some clicks the the red x
+					// When someone clicks the the red x
 					temp = JSONParser.parse("[{}]");
 					context.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 					return temp;
@@ -195,6 +200,12 @@ public class JSONObjectMakerUI {
 				}//if 
 				else 
 				{
+					if(context.output.charAt(context.output.length() - 1) == '[')
+					{
+						context.output.deleteCharAt(context.output.length() - 1); 
+					}
+					
+					
 					addElement(context);
 					return;
 				}
@@ -210,7 +221,6 @@ public class JSONObjectMakerUI {
 	 * 
 	 * */
 	public static void addObject(UIContext context) throws Exception {
-
 		context.depthCount++;
 		context.output.append("{");
 		while (true) {
@@ -278,8 +288,14 @@ public class JSONObjectMakerUI {
 				}//if 
 				else 
 				{
+					if(context.output.charAt(context.output.length() - 1) == '{')
+					{
+						context.output.deleteCharAt(context.output.length() - 1); 
+						
+					}
 					addElement(context);
 					return;
+					
 				}
 			}// switch(context.optionsHolder)
 		}// While(true)
@@ -303,7 +319,6 @@ public class JSONObjectMakerUI {
 
 		context.optionsHolder = optionBox(ops, ops.length, "Type Options",
 				"What type would you like this element to be?", context.frame);
-
 		String input;
 		switch (context.optionsHolder) {
 		// Number
@@ -448,12 +463,13 @@ public class JSONObjectMakerUI {
 	 * it provides the user no options, and returns void.
 	 * 
 	 * It takes one string, the reason the program has failed.
-	 * @throws URISyntaxException 
+	 * @throws Exception 
 	 * */
-	public static void errorBox(String reason) throws IOException, URISyntaxException {
+	public static void errorBox(String reason) throws Exception {
 		javax.swing.JFrame frame = new javax.swing.JFrame();
 		Icon icon = iconGet();
-		Runtime.getRuntime().exec("say I can't do that Dave!");
+		java.nio.file.Path audioPath = Paths.get("Fred/Voice0042.wav");
+		Audio.play(audioPath.toAbsolutePath().toString());
 		JOptionPane.showMessageDialog(frame, reason, "Please try again.",
 				JOptionPane.ERROR_MESSAGE, icon);
 
@@ -466,14 +482,13 @@ public class JSONObjectMakerUI {
 	 * @throws URISyntaxException 
 	 * */
 	public static Icon iconGet() throws URISyntaxException {
-		
-		
+
 		String[] pathNames = { "1", "2", "3", "4", "5", "6", "7", "8", "9",
 				"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 				"20", "21", "22" };
 		int index = (int) (Math.random() * pathNames.length);
 		
-		java.nio.file.Path imgPath = Paths.get("bin/Needed/icon"+pathNames[index] +".jpg");
+		java.nio.file.Path imgPath = Paths.get("Fred/icon"+pathNames[index] +".jpg");
 		
 		Icon icon = new ImageIcon(imgPath.toAbsolutePath().toString());
 		return icon;
@@ -490,9 +505,10 @@ public class JSONObjectMakerUI {
 				"Voice0038.wav", "Voice0039.wav",
 				"Windows OS - Windows Sounds (mp3cut.net).wav" };
 		if (play)
-			Audio.play("/Users/alexandragreenberg/Desktop/Stuff/"
-					+ files[type]);
-
+		{
+			java.nio.file.Path audioPath = Paths.get("Fred/"+ files[type]);
+			Audio.play(audioPath.toAbsolutePath().toString());
+		}//
 	}// playSound()
 
 	/**
@@ -553,7 +569,7 @@ class UIContext {
 // Boxes
 
 // Helen Doughery
-// Message when saying no and error message
+// Idea for message
 
 // Same Rebelsky
 // life advice/Code

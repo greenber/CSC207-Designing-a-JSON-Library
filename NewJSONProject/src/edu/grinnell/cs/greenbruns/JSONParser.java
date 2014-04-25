@@ -7,7 +7,7 @@ import java.util.Hashtable;
 public class JSONParser
 {
 
-  /*
+  /**
    * Object parse(String)
    * 
    * This is a wrapper class used for newParse. parse takes in a string and
@@ -15,6 +15,9 @@ public class JSONParser
    * returns a JAVA Object representing the JSON object represented in input.
    * 
    * Does not fail fast, user should make sure their input is accurate JSON.
+   * 
+   * @author Alex Greenberg
+   * @author Evan Bruns
    */
 
   public static Object parse(String input)
@@ -32,7 +35,7 @@ public class JSONParser
     return result;
   }// parse(String)
 
-  /*
+  /**
    * Object newParse(Context context)
    * 
    * This function takes an object of the context class as input, and returns an
@@ -73,11 +76,11 @@ public class JSONParser
               if(value != null)
               {
               myTable.put(key, value);
-              } 
+              } //if
               else
               {
             	  myTable.put(key,"null");
-              }
+              }//else
               current = context.input.charAt(context.index);
               context.index++;
             }// while
@@ -162,8 +165,6 @@ public class JSONParser
             }// else if
           else
             {
-        	  //????
-        	  
               return null;
             }// else
 
